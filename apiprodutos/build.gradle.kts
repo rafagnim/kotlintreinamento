@@ -21,10 +21,10 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("org.flywaydb:flyway-core")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	runtimeOnly("mysql:mysql-connector-java")
+	implementation("org.flywaydb:flyway-core:8.1.0")
+	runtimeOnly("mysql:mysql-connector-java:8.0.29")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
