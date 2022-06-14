@@ -1,7 +1,10 @@
 package com.nadir.apiprodutos.controllers
 
+import com.nadir.apiprodutos.entities.Produto
+import com.nadir.apiprodutos.requests.ProdutoRequest
 import com.nadir.apiprodutos.services.ProdutoService
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
@@ -20,7 +23,7 @@ class ProdutoController (
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@RequestBody @Valid request: ProdutoRequest) {
-        produtoService.save(request.toBookEntity(null))
-
+    fun create(@RequestBody @Valid request: ProdutoRequest): ResponseEntity<Produto> {
+        return ResponseEntity.ok(produtoService.save(request.toBookEntity(null)))
     }
+}
