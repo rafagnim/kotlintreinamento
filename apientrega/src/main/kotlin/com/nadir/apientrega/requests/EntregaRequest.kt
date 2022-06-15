@@ -7,19 +7,22 @@ class EntregaRequest (
     @field:NotEmpty(message = "O nome é obrigatório.")
     val nome : String,
     @field:NotEmpty(message = "O conteudo é obrigatório.")
-    val conteudo : String
+    val conteudo : String,
+    val bla: String
         ) {
 
         fun toEntregaEntity(entrega: Entrega?): Entrega {
             return if (entrega == null)
                 Entrega(
                     nome = this.nome,
-                    conteudo = this.conteudo
+                    conteudo = this.conteudo,
+                    bla = this.bla
                 )
             else
                 Entrega(
                     nome = entrega.nome,
-                    conteudo = this.conteudo,
+                    conteudo = entrega.conteudo,
+                    bla = entrega.bla
                 )
         }
 }
