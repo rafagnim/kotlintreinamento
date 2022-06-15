@@ -26,4 +26,11 @@ class ProdutoController (
     fun create(@RequestBody @Valid request: ProdutoRequest): ResponseEntity<Produto> {
         return ResponseEntity.ok(produtoService.save(request.toBookEntity(null)))
     }
+
+    @GetMapping
+    fun getAll() : ResponseEntity<List<Produto>>{
+        return ResponseEntity.ok(produtoService.findAll())
+    }
+
+
 }

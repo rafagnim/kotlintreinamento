@@ -7,28 +7,25 @@ import org.springframework.stereotype.Service
 
 
 @Service
-class EntregaService {
-
-    @Autowired
-    private val entregaRepository: EntregaRepository? = null
+class EntregaService (
+    private val entregaRepository: EntregaRepository
+        ) {
 
     fun salvar(entrega: Entrega): Entrega? {
-        return entregaRepository?.save(entrega)
+        val retorno: Entrega? = entregaRepository?.save(entrega)
+        return retorno
     }
 
     fun findAll(): List<Entrega> {
         return entregaRepository?.findAll() as List<Entrega>
     }
 
-    fun count(): Long? {
-        return entregaRepository?.count()
+    fun findOne(id: String): Entrega? {
+        val retorno = entregaRepository?.findById(id)
+        if (retorno != null) {
+            return retorno.get()
+        } else {
+            return null;
+        }
     }
-
-//    fun findById(id: String?): Entrega {
-//        return entregaRepository.findOne(id)
-//    }
-
-//    fun delete(id: String?) {
-//        entregaRepository.delete(id)
-//    }
 }
