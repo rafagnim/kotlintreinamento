@@ -1,0 +1,13 @@
+server:
+  port: 9095
+
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      authentication-database: admin
+      username: admin
+      password: admin
+      database: compras
+
