@@ -1,8 +1,7 @@
-package com.nadir.apientrega
+package com.nadir.apientrega.services
 
 import com.nadir.apientrega.entities.Entrega
 import com.nadir.apientrega.repositories.EntregaRepository
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 
