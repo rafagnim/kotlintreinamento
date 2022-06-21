@@ -1,6 +1,9 @@
 package com.nadir.apicompras.configs
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.nadir.apicompras.utils.EXCHANGENAME
+import com.nadir.apicompras.utils.QUEUENAME
+import com.nadir.apicompras.utils.TESTQUEUE
 import org.springframework.amqp.core.*
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter
 import org.springframework.amqp.support.converter.MessageConverter
@@ -36,7 +39,7 @@ class RabbitMQConfig {
     @Bean
     fun compraExchange() : Exchange{
         return ExchangeBuilder
-            .directExchange(exchangeName)
+            .directExchange(EXCHANGENAME)
             .durable(true)
             .build()
     }
@@ -45,14 +48,14 @@ class RabbitMQConfig {
     @Bean
     fun userModelQueue() : Queue {
         return QueueBuilder
-            .durable(queueName)
+            .durable(QUEUENAME)
             .build()
     }
 
     @Bean
     fun testQueue() : Queue {
         return QueueBuilder
-            .durable("TEST-QUEUE")
+            .durable(TESTQUEUE)
             .build()
     }
 

@@ -1,6 +1,7 @@
 package com.nadir.apientrega.configs
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.nadir.apientrega.utils.QUEUENAME
 import org.springframework.amqp.core.Queue
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter
 import org.springframework.amqp.support.converter.MessageConverter
@@ -10,8 +11,6 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class RabbitMQConfig {
 
-    val queueName = "ENTREGA-QUEUE"
-
     @Bean
     fun messageConverter(objectMapper: ObjectMapper) : MessageConverter {
         return Jackson2JsonMessageConverter(objectMapper)
@@ -19,6 +18,6 @@ class RabbitMQConfig {
 
     @Bean
     fun createUserQueue() : Queue?{
-        return Queue(queueName, true)
+        return Queue(QUEUENAME, true)
     }
 }
