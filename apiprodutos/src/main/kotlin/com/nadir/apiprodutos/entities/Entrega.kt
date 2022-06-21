@@ -1,9 +1,7 @@
-package com.nadir.apientrega.entities
+package com.nadir.apiprodutos.entities
 
-import org.springframework.data.mongodb.core.mapping.Document
 import java.math.BigDecimal
 
-@Document(collection = "entregas")
 data class Entrega(
     val idCliente: Long,
     val idProduto: Long,

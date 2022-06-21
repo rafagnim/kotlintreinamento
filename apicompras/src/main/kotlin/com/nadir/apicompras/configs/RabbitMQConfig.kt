@@ -14,14 +14,14 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class RabbitMQConfig {
 
-    val exchangeName = "compra-entrega-exchange"
+    //val exchangeName = "compra-entrega-exchange"
 
-    val queueName = "ENTREGA-QUEUE"
+    //val queueName = "ENTREGA-QUEUE"
 
     @Bean
-    fun userModelBinding() : Binding{
+    fun compraModelBinding() : Binding{
         return BindingBuilder
-            .bind(userModelQueue())
+            .bind(compraModelQueue())
             .to(compraExchange())
             .with("")
             .noargs()
@@ -46,7 +46,7 @@ class RabbitMQConfig {
 
 
     @Bean
-    fun userModelQueue() : Queue {
+    fun compraModelQueue() : Queue {
         return QueueBuilder
             .durable(QUEUENAME)
             .build()

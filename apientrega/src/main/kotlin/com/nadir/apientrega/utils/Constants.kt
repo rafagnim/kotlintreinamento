@@ -1,3 +1,5 @@
 package com.nadir.apientrega.utils
 
 const val QUEUENAME = "ENTREGA-QUEUE"
+const val QUEUEPARAPRODUTO = "QUEUEPARAPRODUTO"
+const val EXCHANGEPARAPRODUTO = "ENTREGA-PRODUTO-EXCHANGE"
