@@ -2,6 +2,8 @@ package com.nadir.apiclientes.entities
 
 import javax.persistence.*
 
+// CLASSE DESATIVADA
+
 @Entity
 @Table(name = "tb_email")
 data class Email (

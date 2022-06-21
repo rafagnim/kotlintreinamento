@@ -1,6 +1,5 @@
 package com.nadir.apiclientes.entities
 
-import java.util.stream.Stream
 import javax.persistence.*
 
 @Entity
@@ -12,24 +11,34 @@ data class Usuario(
     val id: Long? = null,
 
     @Column(name = "nome")
-    var nome: String,
+    val nome: String,
 
     @Column(name = "idade")
-    var idade: Integer,
+    val idade: Int,
 
     @OneToMany(cascade = [CascadeType.ALL])
-    var enderecos: List<Endereco>? = null,
+    val enderecos: List<Endereco>? = null,
 
     @OneToMany(cascade = [CascadeType.ALL])
-    var telefones: List<Telefone?>? = null,
+    val telefones: List<Telefone?>? = null,
 
-    @OneToMany(cascade = [CascadeType.ALL])
-    var emails: List<Email?>? = null,
+    @Column(name = "email")
+    val email: String,
 
     @Column(name = "senha")
-    var senha: String,
+    val senha: String? = null,
 
     @Column(name = "isactive")
     var isActive: Boolean
 ){
+    fun toGetAll() : Usuario{
+        return Usuario(
+            nome = this.nome,
+            idade = this.idade,
+            enderecos =  this.enderecos,
+            telefones = this.telefones,
+            email = this.email,
+            isActive = this.isActive
+        )
+    }
 }

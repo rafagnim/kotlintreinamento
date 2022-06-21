@@ -4,14 +4,12 @@ import com.nadir.apiclientes.entities.Endereco
 import com.nadir.apiclientes.entities.Usuario
 import com.nadir.apiclientes.integration.feign.client.EnderecoClient
 import com.nadir.apiclientes.integration.feign.client.EnderecoId
-import com.nadir.apiclientes.requests.UsuarioRequest
+import com.nadir.apiclientes.requests.PostUserRequest
 import com.nadir.apiclientes.services.UsuarioService
 import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
-import java.util.stream.Collector
 import javax.validation.Valid
-import kotlin.streams.toList
 
 @RestController
 @RequestMapping("api/v1/usuarios")
@@ -19,16 +17,33 @@ class UsuarioController (
     private val usuarioService: UsuarioService,
     private val enderecoClient: EnderecoClient
         ) {
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    fun create(@RequestBody @Valid request: UsuarioRequest): ResponseEntity<Usuario> {
-        request.enderecos = this.buscaCEPs(request.enderecos);
-        return ResponseEntity.ok(usuarioService.save(request.toUsuarioEntity(null)))
-    }
 
     @GetMapping
-    fun getAll() : ResponseEntity<List<Usuario>> {
-        return ResponseEntity.ok(usuarioService.findAll())
+    @ResponseStatus(HttpStatus.OK)
+    fun getAll() : List<Usuario> {
+        val usuario = SecurityContextHolder.getContext().authentication.principal
+        //val usuario = SecurityContextHolder.getContext().authentication.principal as UserCustomDetails
+        val byId = usuarioService.getById(usuario.toString().toLong())
+        return usuarioService.getAll()
+    }
+
+    @PostMapping("save")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun create(@RequestBody @Valid request : PostUserRequest){
+        request.enderecos = this.buscaCEPs(request.enderecos);
+        return usuarioService.save(request)
+    }
+
+    @PatchMapping("/{id}/disable")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun disable(@PathVariable id : Long){
+        return usuarioService.disable(id)
+    }
+
+    @PatchMapping("/{id}/enable")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun enable(@PathVariable id : Long){
+        return usuarioService.enable(id)
     }
 
     private fun buscaCEPs(enderecos: List<Endereco>?): List<Endereco>? {

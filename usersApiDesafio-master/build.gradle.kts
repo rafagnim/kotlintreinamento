@@ -8,7 +8,7 @@ plugins {
 	kotlin("plugin.jpa") version "1.6.21"
 }
 
-group = "com.nadir"
+group = "br.project.users"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
@@ -16,31 +16,31 @@ repositories {
 	mavenCentral()
 }
 
-extra["springCloudVersion"] = "2021.0.3"
-
 dependencies {
+	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-	runtimeOnly("mysql:mysql-connector-java")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+	//Jpa
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+	//flyway
+	implementation ("org.flywaydb:flyway-core")
+
+	//Gson
+	implementation("com.google.code.gson:gson:2.9.0")
 
 	//JWT
 	implementation("io.jsonwebtoken:jjwt:0.9.1")
 
-	//Gson
-	implementation("com.google.code.gson:gson:2.9.0")
-}
 
-dependencyManagement {
-	imports {
-		mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
-	}
+
+	runtimeOnly("org.postgresql:postgresql")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 tasks.withType<KotlinCompile> {

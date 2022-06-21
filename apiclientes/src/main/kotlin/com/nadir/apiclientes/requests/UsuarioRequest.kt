@@ -9,19 +9,26 @@ import com.nadir.apiclientes.integration.feign.client.EnderecoId
 import java.util.stream.Collectors
 import javax.validation.constraints.NotEmpty
 
+//CLASSE NÃO MAIS UTILIZADA
+
+
+//============================================
+
+//                      REVER
+
 class UsuarioRequest (
     @field:NotEmpty(message = "Obrigatório informar o nome")
     val nome: String,
 
     //@field:NotEmpty(message = "Obrigatório informar a idade")
-    val idade: Integer,
+    val idade: Int,
 
     @field:NotEmpty(message = "Obrigatório informar uma senha")
     val senha: String,
 
     var enderecos: List<Endereco>?,
     var telefones: List<Telefone?>?,
-    var emails: List<Email?>?,
+    var email: String,
 
     //FEIGN:
     val enderecoClient: EnderecoClient?
@@ -35,7 +42,7 @@ class UsuarioRequest (
 
                 enderecos = this.enderecos,
                 telefones = this.telefones,
-                emails = this.emails,
+                email = this.email,
                 senha = this.senha,
                 isActive = true
             )
@@ -46,7 +53,7 @@ class UsuarioRequest (
                 idade = usuario.idade,
                 enderecos = usuario.enderecos,
                 telefones = usuario.telefones,
-                emails = usuario.emails,
+                email = usuario.email,
                 senha = usuario.senha,
                 isActive =  usuario.isActive
             )
