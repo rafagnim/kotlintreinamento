@@ -14,10 +14,6 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class RabbitMQConfig {
 
-    //val exchangeName = "compra-entrega-exchange"
-
-    //val queueName = "ENTREGA-QUEUE"
-
     @Bean
     fun compraModelBinding() : Binding{
         return BindingBuilder

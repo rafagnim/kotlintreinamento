@@ -27,6 +27,16 @@ class UsuarioController (
         return usuarioService.getAll()
     }
 
+    @GetMapping("validatoken")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    fun verificaValidadeToken(): String {
+        //@RequestHeader(value = "Authorization", required = true) authorizationHeader:String
+        // se token válido retorna e-mail do usuário logado
+        val usuario = SecurityContextHolder.getContext().authentication.principal
+        val email = usuarioService.getById(usuario.toString().toLong()).email
+        return email
+    }
+
     @PostMapping("save")
     @ResponseStatus(HttpStatus.CREATED)
     fun create(@RequestBody @Valid request : PostUserRequest){

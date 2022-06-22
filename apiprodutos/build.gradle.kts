@@ -31,6 +31,16 @@ dependencies {
 
 	//Gson
 	implementation("com.google.code.gson:gson:2.9.0")
+
+	//Feign
+	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+}
+
+extra["springCloudVersion"] = "2021.0.3"
+dependencyManagement {
+	imports {
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+	}
 }
 
 tasks.withType<KotlinCompile> {

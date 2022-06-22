@@ -1,7 +1,6 @@
 package com.nadir.apiclientes.environment
 
 import com.nadir.apiclientes.repositories.UsuarioRepository
-import com.nadir.apiclientes.requests.PostUserRequest
 import com.nadir.apiclientes.security.AuthenticationFilter
 import com.nadir.apiclientes.security.AuthorizationFilter
 import com.nadir.apiclientes.security.JwtUtil
@@ -15,6 +14,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.CorsUtils
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 
 @Configuration
@@ -43,5 +47,4 @@ class SecurityConfig(
     fun bCryptPasswordEncoder(): BCryptPasswordEncoder {
         return BCryptPasswordEncoder()
     }
-
 }

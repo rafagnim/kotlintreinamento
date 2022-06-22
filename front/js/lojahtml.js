@@ -1,3 +1,14 @@
+atualizaLogado();
+
+function atualizaLogado() {
+    if (window.sessionStorage.getItem('access_token')) {
+        console.log(window.sessionStorage.getItem('access_token'));
+        document.getElementById("usuarioLogadoInfo").innerHTML = "Usuário Logado";
+    } else {
+        document.getElementById("usuarioLogadoInfo").innerHTML = "Usuário NÃO Logado";
+    }
+}
+
 function login() {
     user = {
         "email": document.getElementById("staticEmail").value,
@@ -7,31 +18,36 @@ function login() {
 
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Cookie", "JSESSIONID=4492DCD57C5361903BDDAA3CE4B0117D");
 
-    var raw = JSON.stringify({
-        "email": "inicial@gft.com",
-        "senha": 123
-    });
-
-    var requestOptions = {
+     var requestOptions = {
         method: 'POST',
         headers: myHeaders,
-        body: raw,
-        redirect: 'follow',
-        mode: "no-cors"
+        body: JSON.stringify(user),
+        redirect: 'follow'
     };
 
     fetch("http://localhost:9094/login", requestOptions)
-    .then(function(res) {
-        return res.text();
-      }).then(function(body) {
-       console.log(body);
-       // NEW CODE
-       // body.access_token is my guess, you might have to change this
-       // based on the response
-       window.sessionStorage.setItem('access_token', body.access_token)
-      });
+        .then(response =>
+            {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    document.getElementById("usuarioLogado").innerHTML = "Acesso negado";
+                    alert("Acesso negado");
+                    window.location.href="login.html";
+                }
+            }
+        )
+        .then(json => {
+            if (json.token) {
+                alert("Acesso autorizado: \n" + json.token);
+                window.sessionStorage.setItem('access_token', json.token);
+                window.location.href="lojakotlin.html";
+            } 
+        })
+        .catch(erro => window.sessionStorage.setItem('access_token', "")
+    );
+
 }
 
 /*

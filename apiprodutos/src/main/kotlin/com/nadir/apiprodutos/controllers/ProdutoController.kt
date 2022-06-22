@@ -1,8 +1,10 @@
 package com.nadir.apiprodutos.controllers
 
 import com.nadir.apiprodutos.entities.Produto
+import com.nadir.apiprodutos.integration.feign.client.UsuarioClient
 import com.nadir.apiprodutos.requests.ProdutoRequest
 import com.nadir.apiprodutos.services.ProdutoService
+import feign.FeignException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -13,7 +15,8 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("api/v1/produtos")
 class ProdutoController (
-    private val produtoService: ProdutoService
+    private val produtoService: ProdutoService,
+    private val usuarioClient: UsuarioClient
         ) {
 //    -> POST /products - Inserir novo produto na base;
 //    -> PATCH /products/{id}/deactivate - Desativa o produto na base;
@@ -28,9 +31,12 @@ class ProdutoController (
     }
 
     @GetMapping
-    fun getAll() : ResponseEntity<List<Produto>>{
-        return ResponseEntity.ok(produtoService.findAll())
+    fun getAll(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String) : ResponseEntity<List<Produto>>{
+        val email:String = usuarioClient.validaToken(authorizationHeader)
+        if (email != "") {
+            return ResponseEntity.ok(produtoService.findAll())
+        } else {
+            throw Exception("Token inválido")
+        }
     }
-
-
 }

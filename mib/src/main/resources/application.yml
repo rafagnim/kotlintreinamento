@@ -3,3 +3,10 @@ server.port: 9090
 integration:
   apiprodutos:
     url: http://localhost:9091
+  apiclientes:
+    url: http://localhost:9094
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher

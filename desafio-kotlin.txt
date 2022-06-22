@@ -1,0 +1,186 @@
+Dicas antes de iniciar o projeto:
+- Pense em quebrar as tarefas a serem feitas em tarefas menores, como acontece em desenvolvimento ágil;
+- Procure seguir o gitflow conforme comentado no treinamento;
+	-> https://www.atlassian.com/br/git/tutorials/comparing-workflows/gitflow-workflow
+	-> https://www.alura.com.br/artigos/git-flow-o-que-e-como-quando-utilizar
+
+
+================ Kotlin API ================
+
+=========
+Objetivo:
+=========
+
+- Criar a estrutura backend de uma aplicação seguindo os preceitos listados abaixo:
+  -> Linguagem Kotlin para implementação;
+  -> Spring-boot como framework;
+  -> Banco Relacional de sua preferência para os serviços de Clientes e Produtos;
+    - Dicas: Postgres ou MySql
+  -> Banco Não Relacional de sua preferência para os serviços de Compras e Entregas;
+    - Dica: MongoDB (Local ou Atlas)
+  -> Utilizar Flyway para versionamento dos scripts de banco de dados;
+  -> Arquitetura REST para criação das APIs síncronas;
+  -> Comunicação via HTTP para a chamada síncrona do client e entre os serviços;
+  -> Uso de mensageria para comunicação assíncrona entre os serviços de Compras/Entregas/Produtos; (Ver arquitetura imagem da arquitetura)
+    - Dica: Kafka ou Rabbit
+  -> É possível utilizar outras bibliotecas para a resolução do desafio;
+
+
+===============
+Especificações:
+===============
+
+- Github:
+  -> Criar um repositório no github para subir a evolução dos serviços;
+  -> Subir todos os serviços no mesmo repositório;
+  -> Seguir a nomenclatura de branchs utilizando o padrão de commits (Conventional Commits);
+
+- Regras a seguir:
+  -> Definir uma porta específica para cada serviço;
+  -> Imprimir logs de Requests e Responses, de forma a conseguir ter visibilidade do fluxo;
+  -> Uso de JSON para comunicação HTTP;
+  -> Query parameters devem ser Case Insensitive;
+  -> Utilizar arquitetura de MVC (Model, View e Controller) para, pelo menos, os serviços de Clientes e Produtos (para os outros podem utilizar outra que conheçam);
+  -> Estabelecer famílias de erros com mensagens e códigos padrões;
+  -> Tratar erros não mapeados como erro genérico;
+  -> Lembrar de utilizar os verbos HTTP e status code corretos, seguindo um fluxo semântico;
+  -> Documentar as APIs com Swagger;
+  -> Definir um contrato entre as APIs antes de iniciar a implementação;
+
+
+==================================
+Dicas - Desenvolvimento do Projeto
+==================================
+
+- As Requests e Responses descritas são exemplos que podem variar dependendo da implementação individual de cada um, logo veja se para o seu caso será necessário alterar algo. O importante é definir bem os contratos e seguí-los (API REST);
+- Um ponto que pode 
+
+---------------
+API - Usuários
+---------------
+
+- Criar um CRUD básico para cadastro, atualização e ativação/desativação de usuários;
+- Dados necessários para cadastro de um novo usuário:
+  -> Nome;
+  -> Idade;
+  -> Endereços; (Rua, Número, Cidade, Estado)
+  -> Telefones;
+  -> E-mail;
+  -> Senha;
+  -> IsActive;
+
+- Não é permitido que usuários menores de idade tenham cadastro na aplicação;
+- A senha deverá ser criptografada antes de ser salva na base;
+
+- Rotas necessárias:
+  -> POST /users - Criar usuário com senha criptografada. A senha sem criptografia será passada no body;
+  -> PATCH /users/{id}/deactivate - Desativa o usuário na base;
+  -> PATCH /users/{id}/activate - Ativa o usuário na base;
+  -> POST /login - Validar o usuário e senha gerando um Token JWT. Só será possível utilizar outras rotas após login passando o token via header. (Veremos isso em Spring Security)
+
+- Deverá realizar comunicação com a API de Serviço de CEP, de forma a validar o endereço.
+  -> Request:
+
+{
+	"endereco": {
+		"tipo": "Rua, Avenida ...",
+		"cidade": "...",
+		...
+	}
+}
+
+--------------------
+API - Serviço de CEP
+--------------------
+
+- Deve conter uma base com os endereços sem números;
+- Se o endereço não existir na base, deve criar um novo resgitro com um número de CEP randômico dentro do padrão apresentado pelos Correios (xx.xxx-xxx);
+- Se o endereço já existir, deve salvar na base com o número de CEP já existente e retornar o CEP para salvar na base de Usuário com o Endereço específico.
+
+  -> Response:
+{
+	"cep": "xx.xxx-xx"
+}
+
+--------------
+API - Produtos
+--------------
+
+- CRUD básico para cadastro, atualização e ativação/desativação de produtos na base;
+- Para que um usuário possa cadastrar/comprar um produto, ele deve ter feito login previamente;
+- Os dados para cadastro de um produto devem ser:
+  -> Nome;
+  -> Quantidade; (Estoque)
+  -> Valor unitário;
+  -> Descrição; (Breve descrição sobre o produto, não deve passar de 100 caracteres)
+  -> IsActive;
+
+- Rotas necessárias:
+  -> POST /products - Inserir novo produto na base;
+  -> PATCH /products/{id}/deactivate - Desativa o produto na base;
+  -> PATCH /products/{id}/activate - Ativa o produtoo na base;
+  -> GET /products - Recupera todos os produtos ativos da base;
+  -> GET /products/{id} - Recupera o produto referente à id informada;
+
+-------------
+API - Compras
+-------------
+
+- Esse serviço deve ser responsável por guardar todo histórico de compras feitas pelo sistema;
+- Ao realizar uma compra com sucesso, deve ser enviado um evento para o tópico específico que será lido pela API de Entrega para dar início ao processo e acompanhamento do envio até a entrega do produtos ao usuário;
+  -> Será utilizado Kafka ou Rabbit para a comunicação de mensageria;
+- Cada transação de compra deve conter uma ID de transação no formato UUID (essa ID não precisa ser, necessariamente, a chave primária), o que facilitará na visibilidade e em processos de rollback para possíveis erros durante o fluxo;
+- Dados para que uma nova compra seja efetuada:
+  -> ID do cliente;
+  -> ID do produto;
+  -> Qtd de itens comprados;
+  -> Valor unitário do item;
+  -> Valor total; 
+
+- O banco de dados deve ser do tipo não relacional;
+
+- Rotas necessárias:
+  -> POST /purchases - Realiza uma nova compra;
+    . Request body: 
+{
+	"idUser": ...,
+	"idProduct": ...,
+	...
+}
+
+  -> GET /purchases/{userId} - Realiza a consulta de todas as compras realizadas pelo usuário detalhando nome do produto, quantidade, valor unitário, valor total da compra realizada e status de entrega;
+  -> GET /purchases/{userId}/{purchaseId} - Realiza a consulta da compra específica para o usuário informado. Possui o mesmo body da consulta anterior;
+    . Response body:
+{
+	"product": {
+		"name":...,
+		"qtd":...,
+		"value":...
+	},
+	"purchase": {
+		"totalValue":...
+	}
+}
+
+--------------
+API - Entregas
+--------------
+
+- Deve ser responsável por guardar histórico do envio dos produtos comprados;
+- Consome da fila/tópico específico, as mensagens enviadas pela API de compras;
+- Ao realizar um envio, deve enviar uma mensagem via tópico/fila para a API de Produtos, que será responsável por remover a quantidade de produtos do estoque;
+- Utilizar banco não relacional;
+- Corpo da mensagem: (Entrega -> Produtos)
+{
+	products: [
+		{
+			"idProduct":...,
+			"qtdProduct":...
+		},
+		...
+	]
+}
+
+- Rotas necessárias:
+  -> GET /deliveries/{userId} -> Consulta todas as entregas do usuário informado;
+  -> GET /deliveries/{userId}/{deliveryId} -> Consulta os dados da entrega específica para o usuário informado;
