@@ -17,3 +17,7 @@ spring:
     username: guest
     password: guest
 
+integration:
+  apiclientes:
+    url: http://localhost:9094
+

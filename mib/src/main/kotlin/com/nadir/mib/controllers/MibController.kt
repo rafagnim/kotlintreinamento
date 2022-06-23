@@ -2,24 +2,30 @@ package com.nadir.mib.controllers
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.nadir.mib.integration.feign.client.CompraClient
 import com.nadir.mib.integration.feign.client.Produto
 import com.nadir.mib.integration.feign.client.ProdutoClient
 import com.nadir.mib.integration.feign.client.UsuarioClient
+import com.nadir.mib.models.Compra
 import com.nadir.mib.models.Token
 import com.nadir.mib.models.Usuario
+import com.nadir.mib.requests.CompraRequest
 import com.nadir.mib.requests.LoginRequest
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiImplicitParam
 import io.swagger.annotations.ApiImplicitParams
 import io.swagger.annotations.ApiParam
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 
 @RestController
 @RequestMapping("shop")
 class MibController (
     val produtoClient: ProdutoClient,
-    val usuarioClient: UsuarioClient
+    val usuarioClient: UsuarioClient,
+    val compraClient: CompraClient
         ) {
     @ApiImplicitParam(value = "Exemplo TOKEN: Bearer 9e878e...")
     @GetMapping("produtos")
@@ -40,5 +46,11 @@ class MibController (
     fun login(@RequestBody usuario: LoginRequest): Token {
         var mapper = jacksonObjectMapper()
         return mapper.readValue(usuarioClient.login(usuario))
+    }
+
+    @ApiImplicitParam(value = "Exemplo TOKEN: Bearer 9e878e...")
+    @PostMapping("compra")
+    fun compra (@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @RequestBody @Valid request: CompraRequest): ResponseEntity<Compra?> {
+        return compraClient.create(authorizationHeader, request)
     }
 }

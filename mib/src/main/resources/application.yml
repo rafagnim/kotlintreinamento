@@ -5,6 +5,8 @@ integration:
     url: http://localhost:9091
   apiclientes:
     url: http://localhost:9094
+  apicompras:
+    url: http://localhost:9095
 
 spring:
   mvc:

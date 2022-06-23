@@ -2,7 +2,6 @@ package com.nadir.apicompras.requests
 
 import com.nadir.apicompras.entities.Compra
 import java.math.BigDecimal
-import javax.validation.constraints.NotEmpty
 
 class CompraRequest (
     val idCliente: Long,
