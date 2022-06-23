@@ -15,4 +15,8 @@ class ProdutoService (
     fun findAll() : List<Produto>{
         return produtoRepository.findAll()
     }
+
+    fun findById(id: Long): Produto {
+        return produtoRepository.findById(id).orElseThrow()
+    }
 }

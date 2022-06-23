@@ -20,4 +20,6 @@ spring:
 integration:
   apiclientes:
     url: http://localhost:9094
+  apiprodutos:
+    url: http://localhost:9091
 

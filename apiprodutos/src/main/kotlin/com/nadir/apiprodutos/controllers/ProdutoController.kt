@@ -2,6 +2,7 @@ package com.nadir.apiprodutos.controllers
 
 import com.nadir.apiprodutos.entities.Produto
 import com.nadir.apiprodutos.integration.feign.client.UsuarioClient
+import com.nadir.apiprodutos.requests.EstoqueRequest
 import com.nadir.apiprodutos.requests.ProdutoRequest
 import com.nadir.apiprodutos.services.ProdutoService
 import feign.FeignException
@@ -32,11 +33,27 @@ class ProdutoController (
 
     @GetMapping
     fun getAll(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String) : ResponseEntity<List<Produto>>{
-        val email:String = usuarioClient.validaToken(authorizationHeader)
-        if (email != "") {
+        val clienteId:Long = usuarioClient.validaToken(authorizationHeader)
+        //if (email != "") {
             return ResponseEntity.ok(produtoService.findAll())
-        } else {
-            throw Exception("Token inválido")
-        }
+        //} else {
+            //throw Exception("Token inválido")
+        //}
+    }
+
+    @PostMapping("verificaestoque")
+    fun verificaEstoque(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @RequestBody @Valid request: EstoqueRequest): Boolean {
+        val clienteID: Long = usuarioClient.validaToken(authorizationHeader)
+        //if (email != "") {
+            val produto: Produto = produtoService.findById(request.idProduto)
+            if (produto.quantidade >= request.qtdItensComprados) {
+                return true
+            } else {
+                return false
+            }
+        //} else {
+        //    throw Exception("Token inválido")
+        //}
+
     }
 }

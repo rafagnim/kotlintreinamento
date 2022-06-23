@@ -4,17 +4,17 @@ import com.nadir.apicompras.entities.Compra
 import java.math.BigDecimal
 
 class CompraRequest (
-    val idCliente: Long,
+    var idCliente: Long?,
     val idProduto: Long,
-    val qtdItensComprados: Integer,
+    val qtdItensComprados: BigDecimal,
     val valorUnitarioDoItem: BigDecimal,
     val valorTotal: BigDecimal?
         ) {
 
-        fun toCompraEntity(compra: Compra?): Compra {
+        fun toCompraEntity(compra: Compra?, idCliente: Long): Compra {
             return if (compra == null)
                 Compra(
-                    idCliente = this.idCliente,
+                    idCliente = idCliente,
                     idProduto = this.idProduto,
                     qtdItensComprados = this.qtdItensComprados,
                     valorUnitarioDoItem = this.valorUnitarioDoItem,

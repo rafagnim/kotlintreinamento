@@ -29,12 +29,14 @@ class UsuarioController (
 
     @GetMapping("validatoken")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    fun verificaValidadeToken(): String {
+    fun verificaValidadeToken(): Long {
         //@RequestHeader(value = "Authorization", required = true) authorizationHeader:String
         // se token válido retorna e-mail do usuário logado
-        val usuario = SecurityContextHolder.getContext().authentication.principal
-        val email = usuarioService.getById(usuario.toString().toLong()).email
-        return email
+        //val usuario = SecurityContextHolder.getContext().authentication.principal.toString().toLong()
+        //val email = usuarioService.getById(usuario.toString().toLong()).email
+        //return email
+        val clienteId: Long? = SecurityContextHolder.getContext().authentication.principal.toString().toLong()
+        return clienteId ?: throw Exception("Não autorizado")
     }
 
     @PostMapping("save")

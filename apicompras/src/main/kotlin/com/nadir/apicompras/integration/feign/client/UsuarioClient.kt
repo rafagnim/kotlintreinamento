@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.RequestHeader
 )
 interface UsuarioClient {
     @GetMapping("api/v1/usuarios/validatoken")
-    fun validaToken(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String): String
+    fun validaToken(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String): Long
 }
