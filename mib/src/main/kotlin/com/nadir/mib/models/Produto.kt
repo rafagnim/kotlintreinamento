@@ -1,4 +1,4 @@
-package com.nadir.mib.integration.feign.client
+package com.nadir.mib.models
 
 import java.math.BigDecimal
 
@@ -9,6 +9,8 @@ data class Produto (
     var nome: String,
 
     var quantidade: BigDecimal,
+
+    var quantidadeReservadaCarrinho: BigDecimal?,
 
     var valorUnitario: BigDecimal,
 
