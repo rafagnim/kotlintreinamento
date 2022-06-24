@@ -15,20 +15,20 @@ class UsuarioService(
 ) {
     fun save(request: PostUserRequest) {
         if (usuarioRepository.existsByEmail(request.email))
-            throw BadRequestException("Email already exists.", "002")
+            throw BadRequestException("Email already exists.")
 
         request.senha = bCrypt.encode(request.senha)
         usuarioRepository.save(request.toEntity())
     }
 
     fun disable(id: Long) {
-        val user = usuarioRepository.findById(id).orElseThrow { NotFoundException("User with id %s not exists.".format(id), "001") }
+        val user = usuarioRepository.findById(id).orElseThrow { NotFoundException("User with id %s not exists.".format(id)) }
         user.isActive = false
         usuarioRepository.save(user)
     }
 
     fun enable(id: Long) {
-        val user = usuarioRepository.findById(id).orElseThrow { NotFoundException("User with id %s not exists.".format(id), "001") }
+        val user = usuarioRepository.findById(id).orElseThrow { NotFoundException("User with id %s not exists.".format(id)) }
         user.isActive = true
         usuarioRepository.save(user)
     }
@@ -38,6 +38,6 @@ class UsuarioService(
     }
 
     fun getById(id : Long): Usuario{
-        return usuarioRepository.findById(id).orElseThrow { NotFoundException("User with id %s not exists.".format(id), "001") }
+        return usuarioRepository.findById(id).orElseThrow { NotFoundException("User with id %s not exists.".format(id)) }
     }
 }

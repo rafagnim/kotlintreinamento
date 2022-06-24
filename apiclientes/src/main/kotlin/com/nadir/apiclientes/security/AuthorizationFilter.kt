@@ -28,7 +28,7 @@ class AuthorizationFilter(
 
     private fun getAuthentication(token: String): UsernamePasswordAuthenticationToken {
         if(!jwtUtil.isValidToken(token)){
-            throw AuthenticationException("invalid token", "001")
+            throw AuthenticationException("Token Inválido")
         }
         val subject = jwtUtil.getSubject(token)
         //val user = userDetailsCustomService.loadUserByUsername(subject)

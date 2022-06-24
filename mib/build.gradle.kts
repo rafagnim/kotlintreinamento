@@ -30,6 +30,9 @@ dependencies {
 	implementation("io.springfox:springfox-swagger2:2.9.2")
 	implementation("io.springfox:springfox-swagger-ui:2.9.2")
 
+	//Wiremock
+ 	testImplementation("org.springframework.cloud:spring.starter-contract-stub-runner")
+
 }
 
 dependencyManagement {

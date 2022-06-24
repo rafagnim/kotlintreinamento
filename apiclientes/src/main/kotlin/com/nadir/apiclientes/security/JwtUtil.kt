@@ -39,7 +39,7 @@ class JwtUtil {
             return Jwts.parser().setSigningKey(secret!!.toByteArray()).parseClaimsJws(token).body
         }
         catch (ex : Exception){
-            throw AuthenticationException("invalid token", "001")
+            throw AuthenticationException("Token Inválido")
         }
     }
 

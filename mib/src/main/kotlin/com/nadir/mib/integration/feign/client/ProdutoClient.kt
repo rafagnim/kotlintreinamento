@@ -1,5 +1,6 @@
 package com.nadir.mib.integration.feign.client
 
+import com.nadir.mib.models.Produto
 import com.nadir.mib.requests.ProdutoRequest
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.http.HttpStatus

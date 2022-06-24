@@ -12,31 +12,33 @@ class FeignErrorDecoder: ErrorDecoder {
 
         return when (response!!.status()) {
             400 -> {
-                //log.error("Error in request went through feign client")
-                //handle exception
                 Exception("Bad Request Through Feign")
             }
             401 -> {
-                //log.error("Error in request went through feign client")
-                //handle exception
                 Exception("Unauthorized Request Through Feign")
             }
             403 -> {
-                //log.error("Error in request went through feign client")
-                //handle exception
-                ForbiddenAccessException("Token Inválido")
+                if (methodKey == "UsuarioClient#login(LoginRequest)") {
+                    ForbiddenAccessException("Usuário ou senha inválido")
+                } else if (methodKey == "CompraClient#create(String,CompraRequest)" || methodKey == "ProdutoClient#retrieveProdutos(String)") {
+                    ForbiddenAccessException("Token Inválido")
+                } else {
+                    ForbiddenAccessException("Acesso não permitido")
+                }
             }
             404 -> {
-                //log.error("Error in request went through feign client")
-                //handle exception
-                Exception("Unidentified Request Through Feign")
+                Exception("Bad Request")
             }
             else -> {
-                //log.error("Error in request went through feign client")
-                //handle exception
                 Exception("Common Feign Exception")
             }
         }
         //return Exception(response!!.reason())
     }
+
+//    when (methodKey) {
+//        "UsuarioClient#login(LoginRequest)" -> ForbiddenAccessException("Usuário ou senha inválido")
+//        "UsuarioClient#validaToken(String)" -> ForbiddenAccessException("Token Inválido")
+//        else -> ForbiddenAccessException("Acesso não permitido")
+//    }
 }

@@ -4,16 +4,13 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.nadir.mib.exceptions.EstoqueInsuficenteException
 import com.nadir.mib.integration.feign.client.*
-import com.nadir.mib.models.Compra
+import com.nadir.mib.models.Produto
 import com.nadir.mib.models.Token
 import com.nadir.mib.models.Usuario
 import com.nadir.mib.requests.CompraRequest
 import com.nadir.mib.requests.LoginRequest
+import com.nadir.mib.requests.PostUserRequest
 import com.nadir.mib.requests.ProdutoRequest
-import io.swagger.annotations.Api
-import io.swagger.annotations.ApiImplicitParam
-import io.swagger.annotations.ApiImplicitParams
-import io.swagger.annotations.ApiParam
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -42,10 +39,16 @@ class MibController (
     }
 
     @GetMapping("usuarios")
+    @ResponseStatus(HttpStatus.CREATED)
     fun retrieveUsuarios(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String) : List<Usuario>
     {
         val auth = authorizationHeader
         return usuarioClient.getAll(authorizationHeader)
+    }
+
+    @PostMapping("novousuario")
+    fun createUser(@RequestBody @Valid request : PostUserRequest) {
+        return usuarioClient.create(request)
     }
 
     @PostMapping("login")

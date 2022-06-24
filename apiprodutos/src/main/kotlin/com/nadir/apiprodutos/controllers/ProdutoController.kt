@@ -34,28 +34,20 @@ class ProdutoController (
     @GetMapping
     fun getAll(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String) : ResponseEntity<List<Produto>>{
         val clienteId:Long = usuarioClient.validaToken(authorizationHeader)
-        //if (email != "") {
-            return ResponseEntity.ok(produtoService.findAll())
-        //} else {
-            //throw Exception("Token inválido")
-        //}
+        return ResponseEntity.ok(produtoService.findAll())
     }
 
     @PostMapping("verificaestoque")
     fun verificaEstoque(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @RequestBody @Valid request: EstoqueRequest): Boolean {
         val clienteID: Long = usuarioClient.validaToken(authorizationHeader)
-        //if (email != "") {
-            val produto: Produto = produtoService.findById(request.idProduto)
-            if (produto.quantidade >= request.qtdItensComprados) {
-                produto.quantidade = produto.quantidade.minus(request.qtdItensComprados)
-                produto.quantidadeReservadaCarrinho = produto.quantidadeReservadaCarrinho?.plus(request.qtdItensComprados)
-                produtoService.save(produto)
-                return true
-            } else {
-                return false
-            }
-        //} else {
-        //    throw Exception("Token inválido")
-        //}
+        val produto: Produto = produtoService.findById(request.idProduto)
+        if (produto.quantidade >= request.qtdItensComprados) {
+            produto.quantidade = produto.quantidade.minus(request.qtdItensComprados)
+            produto.quantidadeReservadaCarrinho = produto.quantidadeReservadaCarrinho?.plus(request.qtdItensComprados)
+            produtoService.save(produto)
+            return true
+        } else {
+            return false
+        }
     }
 }

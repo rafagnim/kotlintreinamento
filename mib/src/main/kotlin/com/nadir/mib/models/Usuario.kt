@@ -5,7 +5,7 @@ data class Usuario(
     val nome: String,
     val idade: Int,
     val enderecos: List<Endereco>? = null,
-    val telefones: List<Telefone?>? = null,
+    val telefones: List<TelefoneRequest?>? = null,
     val email: String,
     val senha: String? = null,
     var isActive: Boolean

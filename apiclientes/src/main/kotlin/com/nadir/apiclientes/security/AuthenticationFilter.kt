@@ -10,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import org.springframework.web.bind.annotation.CrossOrigin
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -28,7 +27,7 @@ class AuthenticationFilter(
             val authToken = UsernamePasswordAuthenticationToken(id, loginRequest.senha)
             return authenticationManager.authenticate(authToken)
         } catch (ex: Exception) {
-            throw AuthenticationException("Login failed", "999")
+            throw AuthenticationException("Token Inválido")
         }
     }
 

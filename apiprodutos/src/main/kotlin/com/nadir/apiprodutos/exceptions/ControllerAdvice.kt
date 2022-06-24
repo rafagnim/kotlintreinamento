@@ -1,6 +1,6 @@
-package com.nadir.mib.exceptions
+package com.nadir.apiprodutos.exceptions
 
-import com.nadir.mib.responses.ErrorResponse
+import com.nadir.apiprodutos.responses.ErrorResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice

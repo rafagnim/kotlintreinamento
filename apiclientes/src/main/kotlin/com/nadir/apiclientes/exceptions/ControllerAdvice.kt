@@ -17,9 +17,7 @@ class ControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handlerMethodArgumentNotValidException(ex: MethodArgumentNotValidException, request: WebRequest): ResponseEntity<ErrorResponse> {
         val error = ErrorResponse(
-            HttpStatus.UNPROCESSABLE_ENTITY.value(),
-            "Invalid Request",
-            ex.bindingResult.fieldErrors.map { "${it.defaultMessage ?: "invalid"} : ${it.field}" }
+            ex.message
         )
         return ResponseEntity(error, HttpStatus.UNPROCESSABLE_ENTITY)
     }
@@ -27,8 +25,7 @@ class ControllerAdvice {
     @ExceptionHandler(BadRequestException::class)
     fun handlerMethodArgumentNotValidException(ex: BadRequestException): ResponseEntity<ErrorResponse> {
         val error = ErrorResponse(
-            HttpStatus.BAD_REQUEST.value(),
-            "Invalid Request: ${ex.message}"
+            ex.message
         )
         return ResponseEntity(error, HttpStatus.BAD_REQUEST)
     }
@@ -36,9 +33,16 @@ class ControllerAdvice {
     @ExceptionHandler(NotFoundException::class)
     fun handlerMethodArgumentNotValidException(ex: NotFoundException): ResponseEntity<ErrorResponse> {
         val error = ErrorResponse(
-            HttpStatus.NOT_FOUND.value(),
-            "${ex.errorCode} - Invalid Request: ${ex.message}"
+            ex.message
         )
         return ResponseEntity(error, HttpStatus.NOT_FOUND)
+    }
+
+    @ExceptionHandler(AuthenticationException::class)
+    fun handlerAuthenticationException(ex: NotFoundException): ResponseEntity<ErrorResponse> {
+        val error = ErrorResponse(
+            ex.message
+        )
+        return ResponseEntity(error, HttpStatus.FORBIDDEN)
     }
 }
