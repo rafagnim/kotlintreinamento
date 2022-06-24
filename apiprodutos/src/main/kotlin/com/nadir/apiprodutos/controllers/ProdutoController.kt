@@ -27,8 +27,8 @@ class ProdutoController (
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@RequestBody @Valid request: ProdutoRequest): ResponseEntity<Produto> {
-        return ResponseEntity.ok(produtoService.save(request.toBookEntity(null)))
+    fun create(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @RequestBody @Valid request: ProdutoRequest): ResponseEntity<Produto> {
+        return ResponseEntity.ok(produtoService.save(request.toProdutoEntity(null)))
     }
 
     @GetMapping
@@ -47,6 +47,9 @@ class ProdutoController (
         //if (email != "") {
             val produto: Produto = produtoService.findById(request.idProduto)
             if (produto.quantidade >= request.qtdItensComprados) {
+                produto.quantidade = produto.quantidade.minus(request.qtdItensComprados)
+                produto.quantidadeReservadaCarrinho = produto.quantidadeReservadaCarrinho?.plus(request.qtdItensComprados)
+                produtoService.save(produto)
                 return true
             } else {
                 return false
@@ -54,6 +57,5 @@ class ProdutoController (
         //} else {
         //    throw Exception("Token inválido")
         //}
-
     }
 }

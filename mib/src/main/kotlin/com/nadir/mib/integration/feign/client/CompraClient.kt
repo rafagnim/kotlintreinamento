@@ -18,5 +18,5 @@ interface CompraClient {
     fun create(
         @RequestHeader(value = "Authorization", required = true) authorizationHeader: String,
         @RequestBody @Valid request: CompraRequest
-    ): ResponseEntity<Compra?>
+    ): Boolean
 }

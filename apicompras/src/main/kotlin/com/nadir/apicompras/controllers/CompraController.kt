@@ -2,6 +2,8 @@ package com.nadir.apicompras.controllers
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.nadir.apicompras.entities.Compra
+import com.nadir.apicompras.exceptions.EstoqueInsuficenteException
+import com.nadir.apicompras.integration.feign.client.FeignErrorDecoder
 import com.nadir.apicompras.integration.feign.client.ProdutoClient
 import com.nadir.apicompras.integration.feign.client.UsuarioClient
 import com.nadir.apicompras.requests.CompraRequest
@@ -28,7 +30,7 @@ class CompraController (
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @RequestBody @Valid request: CompraRequest): ResponseEntity<Compra?> {
+    fun create(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @RequestBody @Valid request: CompraRequest): Boolean {
 
         val clienteId:Long = usuarioClient.validaToken(authorizationHeader)
 
@@ -45,9 +47,10 @@ class CompraController (
                 val message = mapper.writeValueAsString(request.toCompraEntity(null, clienteId))
 
                 rabbitTemplate.convertAndSend(EXCHANGENAME,"", message)
-                return ResponseEntity.ok(compraService.salvar(request.toCompraEntity(null, clienteId)))
+                compraService.salvar(request.toCompraEntity(null, clienteId))
+                return true
             } else {
-                throw Exception("Estoque insuficiente")
+                return false
             }
         //} else {
         //    throw Exception("Token inválido")

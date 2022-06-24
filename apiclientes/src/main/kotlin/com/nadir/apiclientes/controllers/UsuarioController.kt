@@ -22,21 +22,13 @@ class UsuarioController (
     @ResponseStatus(HttpStatus.OK)
     fun getAll() : List<Usuario> {
         val usuario = SecurityContextHolder.getContext().authentication.principal
-        //val usuario = SecurityContextHolder.getContext().authentication.principal as UserCustomDetails
-        val byId = usuarioService.getById(usuario.toString().toLong())
         return usuarioService.getAll()
     }
 
     @GetMapping("validatoken")
     @ResponseStatus(HttpStatus.ACCEPTED)
     fun verificaValidadeToken(): Long {
-        //@RequestHeader(value = "Authorization", required = true) authorizationHeader:String
-        // se token válido retorna e-mail do usuário logado
-        //val usuario = SecurityContextHolder.getContext().authentication.principal.toString().toLong()
-        //val email = usuarioService.getById(usuario.toString().toLong()).email
-        //return email
-        val clienteId: Long? = SecurityContextHolder.getContext().authentication.principal.toString().toLong()
-        return clienteId ?: throw Exception("Não autorizado")
+        return SecurityContextHolder.getContext().authentication.principal.toString().toLong()
     }
 
     @PostMapping("save")
@@ -59,12 +51,10 @@ class UsuarioController (
     }
 
     private fun buscaCEPs(enderecos: List<Endereco>?): List<Endereco>? {
-        if (enderecos != null) {
-            enderecos.forEach {
-                var end: EnderecoId = EnderecoId(it.uf, it.municipio, it.logradouro)
-                var cep: String = enderecoClient.buscaCEP(end)
-                it.cep = cep
-            }
+        enderecos?.forEach {
+            val end: EnderecoId = EnderecoId(it.uf, it.municipio, it.logradouro)
+            val cep: String = enderecoClient.buscaCEP(end)
+            it.cep = cep
         }
         return enderecos
     }

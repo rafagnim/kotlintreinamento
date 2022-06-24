@@ -18,6 +18,9 @@ data class Produto (
     @Column(name = "quantidade")
     var quantidade: BigDecimal,
 
+    @Column(name = "quantidade_reservada_carrinho")
+    var quantidadeReservadaCarrinho: BigDecimal?,
+
     @Column(name = "vlr_unitario")
     var valorUnitario: BigDecimal,
 
