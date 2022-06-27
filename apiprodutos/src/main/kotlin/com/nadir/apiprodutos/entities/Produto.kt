@@ -1,10 +1,12 @@
 package com.nadir.apiprodutos.entities
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import java.math.BigDecimal
 import javax.persistence.*
 
 @Entity
 @Table(name = "tb_produto")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class Produto (
 
     @Id
