@@ -4,10 +4,7 @@ import com.nadir.mib.models.Usuario
 import com.nadir.mib.requests.LoginRequest
 import com.nadir.mib.requests.PostUserRequest
 import org.springframework.cloud.openfeign.FeignClient
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestHeader
+import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @FeignClient(
@@ -23,6 +20,12 @@ interface UsuarioClient {
 
     @GetMapping("api/v1/usuarios")
     fun getAll(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String): List<Usuario>
+
+    @PatchMapping("api/v1/usuarios/disable/{id}")
+    fun disable(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @PathVariable id : Long)
+
+    @PatchMapping("api/v1/usuarios/enable/{id}")
+    fun enable(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @PathVariable id : Long)
 }
 
 

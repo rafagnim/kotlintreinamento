@@ -33,6 +33,9 @@ dependencies {
 	//Wiremock
  	//testImplementation("org.springframework.cloud:spring.starter-contract-stub-runner")
 
+	// para utilizar PATCH no Feign
+	implementation("io.github.openfeign:feign-okhttp:10.2.0")
+
 }
 
 dependencyManagement {

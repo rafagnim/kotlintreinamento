@@ -51,6 +51,16 @@ class MibController (
         return usuarioClient.create(request)
     }
 
+    @PatchMapping("enableuser/{id}")
+    fun enableUser(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @PathVariable id : Long) {
+        usuarioClient.enable(authorizationHeader, id)
+    }
+
+    @PatchMapping("disableuser/{id}")
+    fun disableUser(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @PathVariable id : Long) {
+        usuarioClient.disable(authorizationHeader, id)
+    }
+
     @PostMapping("login")
     fun login(@RequestBody usuario: LoginRequest): Token {
         var mapper = jacksonObjectMapper()

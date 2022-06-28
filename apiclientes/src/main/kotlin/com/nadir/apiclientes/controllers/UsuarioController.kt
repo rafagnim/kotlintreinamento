@@ -38,13 +38,13 @@ class UsuarioController (
         return usuarioService.save(request)
     }
 
-    @PatchMapping("/{id}/disable")
+    @PatchMapping("/disable/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun disable(@PathVariable id : Long){
         return usuarioService.disable(id)
     }
 
-    @PatchMapping("/{id}/enable")
+    @PatchMapping("/enable/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun enable(@PathVariable id : Long){
         return usuarioService.enable(id)
