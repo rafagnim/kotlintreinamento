@@ -1,3 +1,5 @@
 package com.nadir.mib.exceptions
 
-class EstoqueInsuficenteException (override val message : String) : Exception()
+import org.springframework.http.HttpStatus
+
+class EstoqueInsuficenteException (override val message : String, val status: Int) : Exception()

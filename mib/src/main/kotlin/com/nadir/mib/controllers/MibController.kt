@@ -64,7 +64,7 @@ class MibController (
             if (retorno) {
                 return ResponseEntity.ok(request)
             } else {
-                throw EstoqueInsuficenteException("Estoque Insuficiente")
+                throw EstoqueInsuficenteException("Estoque Insuficiente", 422)
             }
         } catch (ex: AuthenticationException) {
             throw AuthenticationException(ex.message)
