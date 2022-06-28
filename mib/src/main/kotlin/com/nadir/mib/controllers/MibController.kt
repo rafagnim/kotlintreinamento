@@ -11,6 +11,7 @@ import com.nadir.mib.requests.CompraRequest
 import com.nadir.mib.requests.LoginRequest
 import com.nadir.mib.requests.PostUserRequest
 import com.nadir.mib.requests.ProdutoRequest
+import com.nadir.mib.responses.UsuarioResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -38,6 +39,23 @@ class MibController (
         return produtoClient.retrieveProdutos(authorizationHeader)
     }
 
+    @GetMapping("produtos/{id}")
+    fun findProdutoById(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @PathVariable id : Long ): Produto {
+        var prod = produtoClient.findById(authorizationHeader, id)
+        return produtoClient.findById(authorizationHeader, id)
+    }
+
+    @PatchMapping("/produtos/disable/{id}")
+    fun disableProduto(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @PathVariable id : Long) {
+        return produtoClient.disable(authorizationHeader, id)
+    }
+
+    @PatchMapping("api/v1/produtos/enable/{id}")
+    fun enableProduto(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @PathVariable id : Long) {
+        return produtoClient.enable(authorizationHeader, id)
+    }
+
+
     @GetMapping("usuarios")
     @ResponseStatus(HttpStatus.CREATED)
     fun retrieveUsuarios(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String) : List<Usuario>
@@ -49,6 +67,11 @@ class MibController (
     @PostMapping("novousuario")
     fun createUser(@RequestBody @Valid request : PostUserRequest) {
         return usuarioClient.create(request)
+    }
+
+    @GetMapping("usuarios/{id}")
+    fun findUsuarioById(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @PathVariable id : Long ): UsuarioResponse {
+        return usuarioClient.findById(authorizationHeader, id)
     }
 
     @PatchMapping("enableuser/{id}")

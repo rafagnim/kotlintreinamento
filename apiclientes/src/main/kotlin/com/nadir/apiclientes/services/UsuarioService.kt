@@ -5,6 +5,7 @@ import com.nadir.apiclientes.exceptions.BadRequestException
 import com.nadir.apiclientes.exceptions.NotFoundException
 import com.nadir.apiclientes.repositories.UsuarioRepository
 import com.nadir.apiclientes.requests.PostUserRequest
+import com.nadir.apiclientes.responses.UsuarioResponse
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
@@ -41,7 +42,7 @@ class UsuarioService(
         return usuarioRepository.findAll().map { it.toGetAll() }
     }
 
-    fun getById(id : Long): Usuario{
-        return usuarioRepository.findById(id).orElseThrow { NotFoundException("User with id %s not exists.".format(id)) }
+    fun getById(id : Long): UsuarioResponse {
+        return usuarioRepository.findById(id).orElseThrow { NotFoundException("User with id %s not exists.".format(id)) }.toUserResponse()
     }
 }

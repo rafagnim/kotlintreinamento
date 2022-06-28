@@ -25,4 +25,28 @@ class ControllerAdvice {
         )
         return ResponseEntity(error, HttpStatus.BAD_REQUEST)
     }
+
+    @ExceptionHandler(NotFoundException::class)
+    fun handlerMethodArgumentNotValidException(ex: NotFoundException): ResponseEntity<ErrorResponse> {
+        val error = ErrorResponse(
+            ex.message
+        )
+        return ResponseEntity(error, HttpStatus.NOT_FOUND)
+    }
+
+    @ExceptionHandler(AuthenticationException::class)
+    fun handlerAuthenticationException(ex: NotFoundException): ResponseEntity<ErrorResponse> {
+        val error = ErrorResponse(
+            ex.message
+        )
+        return ResponseEntity(error, HttpStatus.FORBIDDEN)
+    }
+
+    @ExceptionHandler(EstoqueNaoZeradoException::class)
+    fun handlerEstoqueNaoZeradoException(ex: EstoqueNaoZeradoException): ResponseEntity<ErrorResponse> {
+        val error = ErrorResponse(
+            ex.message
+        )
+        return ResponseEntity(error, HttpStatus.BAD_REQUEST)
+    }
 }

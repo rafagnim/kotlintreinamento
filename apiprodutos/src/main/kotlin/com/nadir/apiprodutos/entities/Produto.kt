@@ -21,7 +21,7 @@ data class Produto (
     var quantidade: BigDecimal,
 
     @Column(name = "quantidade_reservada_carrinho")
-    var quantidadeReservadaCarrinho: BigDecimal?,
+    var quantidadeReservadaCarrinho: BigDecimal = BigDecimal.ZERO,
 
     @Column(name = "vlr_unitario")
     var valorUnitario: BigDecimal,

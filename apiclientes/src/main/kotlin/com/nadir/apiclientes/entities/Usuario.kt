@@ -1,5 +1,6 @@
 package com.nadir.apiclientes.entities
 
+import com.nadir.apiclientes.responses.UsuarioResponse
 import javax.persistence.*
 
 @Entity
@@ -40,5 +41,17 @@ data class Usuario(
             email = this.email,
             isActive = this.isActive
         )
+    }
+
+    fun toUserResponse() : UsuarioResponse {
+        return UsuarioResponse (
+            id = this.id!!,
+            nome = this.nome,
+            idade = this.idade,
+            enderecos = this.enderecos,
+            telefones = this.telefones,
+            email = this.email,
+            isActive = this.isActive
+                )
     }
 }

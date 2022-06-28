@@ -1,17 +1,15 @@
 package com.nadir.apiprodutos.controllers
 
 import com.nadir.apiprodutos.entities.Produto
+import com.nadir.apiprodutos.exceptions.AuthenticationException
 import com.nadir.apiprodutos.integration.feign.client.UsuarioClient
 import com.nadir.apiprodutos.requests.EstoqueRequest
 import com.nadir.apiprodutos.requests.ProdutoRequest
 import com.nadir.apiprodutos.services.ProdutoService
-import feign.FeignException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
-
-//- Para que um usuário possa cadastrar/comprar um produto, ele deve ter feito login previamente;
 
 @RestController
 @RequestMapping("api/v1/produtos")
@@ -19,11 +17,6 @@ class ProdutoController (
     private val produtoService: ProdutoService,
     private val usuarioClient: UsuarioClient
         ) {
-//    -> POST /products - Inserir novo produto na base;
-//    -> PATCH /products/{id}/deactivate - Desativa o produto na base;
-//    -> PATCH /products/{id}/activate - Ativa o produtoo na base;
-//    -> GET /products - Recupera todos os produtos ativos da base;
-//    -> GET /products/{id} - Recupera o produto referente à id informada;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -35,6 +28,12 @@ class ProdutoController (
     fun getAll(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String) : ResponseEntity<List<Produto>>{
         val clienteId:Long = usuarioClient.validaToken(authorizationHeader)
         return ResponseEntity.ok(produtoService.findAll())
+    }
+
+    @GetMapping("/{id}")
+    fun getById(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @PathVariable id : Long) : ResponseEntity<Produto>{
+        val clienteId:Long = usuarioClient.validaToken(authorizationHeader)
+        return ResponseEntity.ok(produtoService.findById(id))
     }
 
     @PostMapping("verificaestoque")
@@ -49,5 +48,24 @@ class ProdutoController (
         } else {
             return false
         }
+    }
+
+    @PatchMapping("/disable/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun disable(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @PathVariable id : Long){
+        val clienteID: Long = usuarioClient.validaToken(authorizationHeader)
+        if (clienteID == 1L) {
+            return produtoService.disable(id)
+        } else throw throw AuthenticationException("Usuário não autorizado")
+
+    }
+
+    @PatchMapping("/enable/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun enable(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @PathVariable id : Long){
+        val clienteID: Long = usuarioClient.validaToken(authorizationHeader)
+        if (clienteID == 1L) {
+            return produtoService.enable(id)
+        } else throw throw AuthenticationException("Usuário não autorizado")
     }
 }

@@ -5,8 +5,10 @@ import com.nadir.apiclientes.entities.Usuario
 import com.nadir.apiclientes.integration.feign.client.EnderecoClient
 import com.nadir.apiclientes.integration.feign.client.EnderecoId
 import com.nadir.apiclientes.requests.PostUserRequest
+import com.nadir.apiclientes.responses.UsuarioResponse
 import com.nadir.apiclientes.services.UsuarioService
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
@@ -23,6 +25,11 @@ class UsuarioController (
     fun getAll() : List<Usuario> {
         val usuario = SecurityContextHolder.getContext().authentication.principal
         return usuarioService.getAll()
+    }
+
+    @GetMapping("/{id}")
+    fun getById(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @PathVariable id : Long) : ResponseEntity<UsuarioResponse> {
+        return ResponseEntity.ok(usuarioService.getById(id))
     }
 
     @GetMapping("validatoken")
