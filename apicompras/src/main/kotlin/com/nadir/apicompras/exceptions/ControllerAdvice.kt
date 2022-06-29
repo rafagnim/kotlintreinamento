@@ -24,4 +24,12 @@ class ControllerAdvice {
         )
         return ResponseEntity(error, HttpStatus.FORBIDDEN)
     }
+
+    @ExceptionHandler(EntityNotFoundException::class)
+    fun handlerEntityNotFoundException(ex: EntityNotFoundException): ResponseEntity<ErrorResponse> {
+        val error = ErrorResponse(
+            ex.message
+        )
+        return ResponseEntity(error, HttpStatus.NOT_FOUND)
+    }
 }

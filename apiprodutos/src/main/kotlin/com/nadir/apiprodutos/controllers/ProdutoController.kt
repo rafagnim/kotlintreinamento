@@ -21,6 +21,7 @@ class ProdutoController (
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun create(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @RequestBody @Valid request: ProdutoRequest): ResponseEntity<Produto> {
+        usuarioClient.validaToken(authorizationHeader)
         return ResponseEntity.ok(produtoService.save(request.toProdutoEntity(null)))
     }
 

@@ -6,6 +6,7 @@ import com.nadir.apicompras.exceptions.EstoqueInsuficenteException
 import com.nadir.apicompras.integration.feign.client.FeignErrorDecoder
 import com.nadir.apicompras.integration.feign.client.ProdutoClient
 import com.nadir.apicompras.integration.feign.client.UsuarioClient
+import com.nadir.apicompras.reponses.CompraResponse
 import com.nadir.apicompras.requests.CompraRequest
 import com.nadir.apicompras.requests.EstoqueRequest
 import com.nadir.apicompras.services.CompraService
@@ -15,6 +16,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.util.*
 import javax.validation.Valid
 
 @RestController
@@ -34,17 +36,11 @@ class CompraController (
 
         val clienteId:Long = usuarioClient.validaToken(authorizationHeader)
 
-
-        //val cliente_id:Long = usuarioClient.validaToken(authorizationHeader)
-        //if (cliente_id != null) {
-            //verifica idCliente
-            //usa id do contexto
-            //request.idCliente = cliente_id
             val estoqueRequest = EstoqueRequest(request.idProduto, request.qtdItensComprados)
             if (produtoClient.verificaEstoqueProduto(authorizationHeader, estoqueRequest)) {
                 log.info("sending compra to exchange")
                 var mapper = jacksonObjectMapper()
-                val message = mapper.writeValueAsString(request.toCompraEntity(null, clienteId))
+                val message = mapper.writeValueAsString(request.toEntregaEntity(clienteId))
 
                 rabbitTemplate.convertAndSend(EXCHANGENAME,"", message)
                 compraService.salvar(request.toCompraEntity(null, clienteId))
@@ -52,8 +48,17 @@ class CompraController (
             } else {
                 return false
             }
-        //} else {
-        //    throw Exception("Token inválido")
-        //}
+    }
+
+    @GetMapping("/{idCliente}")
+    fun getAllByIdClient(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @PathVariable idCliente: Long) : List<CompraResponse> {
+        usuarioClient.validaToken(authorizationHeader)
+        return compraService.getAllByUserId(idCliente)
+    }
+
+    @GetMapping("/{idCliente}/{id}")
+    fun getAllByIdClient(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @PathVariable idCliente: Long, @PathVariable id: UUID) : CompraResponse {
+        usuarioClient.validaToken(authorizationHeader)
+        return compraService.getAllByUserIdAndId(idCliente, id)
     }
 }
