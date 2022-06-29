@@ -11,10 +11,12 @@ import com.nadir.mib.requests.CompraRequest
 import com.nadir.mib.requests.LoginRequest
 import com.nadir.mib.requests.PostUserRequest
 import com.nadir.mib.requests.ProdutoRequest
+import com.nadir.mib.responses.CompraResponse
 import com.nadir.mib.responses.UsuarioResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.util.*
 import javax.security.sasl.AuthenticationException
 import javax.validation.Valid
 
@@ -102,5 +104,21 @@ class MibController (
         } catch (ex: AuthenticationException) {
             throw AuthenticationException(ex.message)
         }
+    }
+
+    @GetMapping("/api/v1/compras/{idCliente}")
+    fun getAllComprasByIdCliente(
+        @RequestHeader(value = "Authorization", required = true) authorizationHeader: String,
+        @PathVariable idCliente: Long
+    ): List<CompraResponse> {
+        return compraClient.getAllComprasByIdCliente(authorizationHeader, idCliente)
+    }
+
+    @GetMapping("/api/v1/compras/{idCliente}/{idCompra}")
+    fun getAllComprasByIdClienteAndByIdCompra(
+        @RequestHeader(value = "Authorization", required = true) authorizationHeader: String,
+        @PathVariable idCliente: Long, @PathVariable idCompra: UUID
+    ): CompraResponse {
+        return compraClient.getAllComprasByIdClienteAndByIdCompra(authorizationHeader, idCliente, idCompra)
     }
 }

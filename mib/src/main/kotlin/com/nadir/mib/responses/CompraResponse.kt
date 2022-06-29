@@ -1,4 +1,4 @@
-package com.nadir.apicompras.reponses
+package com.nadir.mib.responses
 
 import java.math.BigDecimal
 
