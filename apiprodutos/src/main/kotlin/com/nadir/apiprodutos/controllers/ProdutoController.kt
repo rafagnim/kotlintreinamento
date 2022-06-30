@@ -53,7 +53,7 @@ class ProdutoController (
 
     @PatchMapping("/disable/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun disable(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @PathVariable id : Long){
+    fun disable(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @PathVariable id : Long): Produto{
         val clienteID: Long = usuarioClient.validaToken(authorizationHeader)
         if (clienteID == 1L) {
             return produtoService.disable(id)
@@ -63,7 +63,7 @@ class ProdutoController (
 
     @PatchMapping("/enable/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun enable(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @PathVariable id : Long){
+    fun enable(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @PathVariable id : Long): Produto{
         val clienteID: Long = usuarioClient.validaToken(authorizationHeader)
         if (clienteID == 1L) {
             return produtoService.enable(id)

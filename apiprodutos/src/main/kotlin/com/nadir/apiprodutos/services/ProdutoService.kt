@@ -23,10 +23,10 @@ class ProdutoService (
         return produtoRepository.findAll()
     }
 
-    fun disable(id: Long) {
+    fun disable(id: Long): Produto {
         val produto = produtoRepository.findById(id).orElseThrow {
             NotFoundException(
-                "Product with id %s not exists.".format(
+                "Produto com id %s não localizado.".format(
                     id
                 )
             )
@@ -39,12 +39,16 @@ class ProdutoService (
             throw EstoqueNaoZeradoException("O estoque precisa estar zerado para desativar o produto")
         }
 
+        return produto
+
     }
 
-    fun enable(id: Long) {
+    fun enable(id: Long): Produto {
         val produto = produtoRepository.findById(id).orElseThrow { NotFoundException("User with id %s not exists.".format(id)) }
         produto.isActive = true
         produtoRepository.save(produto)
+
+        return produto
     }
 
     fun findById(id: Long): Produto {
