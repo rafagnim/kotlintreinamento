@@ -26,7 +26,8 @@ import javax.validation.Valid
 class MibController (
     val produtoClient: ProdutoClient,
     val usuarioClient: UsuarioClient,
-    val compraClient: CompraClient
+    val compraClient: CompraClient,
+    val entregaClient: CompraClient
         ) {
 
     @PostMapping("criarproduto")
@@ -120,5 +121,21 @@ class MibController (
         @PathVariable idCliente: Long, @PathVariable idCompra: UUID
     ): CompraResponse {
         return compraClient.getAllComprasByIdClienteAndByIdCompra(authorizationHeader, idCliente, idCompra)
+    }
+
+    @GetMapping("/api/v1/entregas/{idCliente}")
+    fun getAllEntregasByIdCliente(
+        @RequestHeader(value = "Authorization", required = true) authorizationHeader: String,
+        @PathVariable idCliente: Long
+    ): List<CompraResponse> {
+        return entregaClient.getAllComprasByIdCliente(authorizationHeader, idCliente)
+    }
+
+    @GetMapping("/api/v1/entregas/{idCliente}/{idCompra}")
+    fun getAllEntregasByIdClienteAndByIdCompra(
+        @RequestHeader(value = "Authorization", required = true) authorizationHeader: String,
+        @PathVariable idCliente: Long, @PathVariable idCompra: UUID
+    ): CompraResponse {
+        return entregaClient.getAllComprasByIdClienteAndByIdCompra(authorizationHeader, idCliente, idCompra)
     }
 }

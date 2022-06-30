@@ -7,8 +7,10 @@ import java.util.*
 
 @Document(collection = "entregas")
 data class Entrega(
+    @Id
+    var id: UUID?,
     val idCliente: Long,
     val idProduto: Long,
     val qtdItensComprados: Integer,
     val valorUnitarioDoItem: BigDecimal,
-    val valorTotal: BigDecimal) {}
+    val valorTotal: BigDecimal)

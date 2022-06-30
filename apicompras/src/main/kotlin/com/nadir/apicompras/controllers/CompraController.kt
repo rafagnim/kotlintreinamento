@@ -41,7 +41,7 @@ class CompraController (
                 log.info("sending compra to exchange")
                 var mapper = jacksonObjectMapper()
                 val message = mapper.writeValueAsString(request.toEntregaEntity(clienteId))
-
+                log.info(message)
                 rabbitTemplate.convertAndSend(EXCHANGENAME,"", message)
                 compraService.salvar(request.toCompraEntity(null, clienteId))
                 return true
