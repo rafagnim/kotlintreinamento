@@ -19,10 +19,9 @@ class ProdutoController (
         ) {
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     fun create(@RequestHeader(value = "Authorization", required = true) authorizationHeader:String, @RequestBody @Valid request: ProdutoRequest): ResponseEntity<Produto> {
         usuarioClient.validaToken(authorizationHeader)
-        return ResponseEntity.ok(produtoService.save(request.toProdutoEntity(null)))
+        return ResponseEntity(produtoService.save(request.toProdutoEntity(null)), HttpStatus.CREATED)
     }
 
     @GetMapping
@@ -46,9 +45,8 @@ class ProdutoController (
             produto.quantidadeReservadaCarrinho = produto.quantidadeReservadaCarrinho?.plus(request.qtdItensComprados)
             produtoService.save(produto)
             return true
-        } else {
-            return false
         }
+        return false
     }
 
     @PatchMapping("/disable/{id}")

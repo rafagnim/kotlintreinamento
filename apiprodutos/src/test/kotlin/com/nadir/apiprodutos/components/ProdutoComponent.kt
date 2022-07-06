@@ -33,14 +33,14 @@ class ProdutoComponent {
             return Produto(id, nome, quantidade, quantidadeReservadaCarrinho, valorUnitario, descricao, isActive)
         }
 
-//        fun createProdutoRequest(
-//            nome: String = "Produto ${Random().nextInt(1000)}",
-//            quantidade: BigDecimal = BigDecimal.valueOf((0L..1000L).random()),
-//            quantidadeReservadaCarrinho: BigDecimal = quantidade.multiply(BigDecimal.valueOf(0.05)).setScale(0, RoundingMode.DOWN),
-//            valorUnitario: BigDecimal = BigDecimal.valueOf((1L..10L).random()),
-//            descricao: String =  "Produto Descricao ${Random().nextInt(1000)}"
-//        ) : ProdutoRequest {
-//            return ProdutoRequest(nome, quantidade, quantidadeReservadaCarrinho, valorUnitario, descricao)
-//        }
+        fun createProdutoRequest(
+            nome: String = "Produto ${Random().nextInt(1000)}",
+            quantidade: BigDecimal = BigDecimal.valueOf((0L..1000L).random()),
+            quantidadeReservadaCarrinho: BigDecimal = quantidade.multiply(BigDecimal.valueOf(0.05)).setScale(0, RoundingMode.DOWN),
+            valorUnitario: BigDecimal = BigDecimal.valueOf((1L..10L).random()),
+            descricao: String =  "Produto Descricao ${Random().nextInt(1000)}"
+        ) : ProdutoRequest {
+            return ProdutoRequest(nome, quantidade, quantidadeReservadaCarrinho, valorUnitario, descricao)
+        }
     }
 }

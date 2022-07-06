@@ -10,6 +10,7 @@ import com.nadir.apiprodutos.services.ProdutoService
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
@@ -95,6 +96,14 @@ class ProdutoServiceTest {
         } catch(ex: EstoqueNaoZeradoException) {
             assertEquals("O estoque precisa estar zerado para desativar o produto".format(id), ex.message)
         }
+    }
+
+
+    @Test
+    fun `quando se tenta desativar com id inexistente lanca excecao NotFound`() {
+        val id: Long = 10L
+        `when`(produtoRepository.findById(id)).thenReturn(Optional.empty())
+        assertThrows<NotFoundException> { produtoService.disable(id) }
     }
 
     @Test

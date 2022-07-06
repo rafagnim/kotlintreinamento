@@ -38,6 +38,13 @@ dependencies {
 	//Redis
 	implementation("org.springframework.boot:spring-boot-starter-cache")
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
+
+	// https://mvnrepository.com/artifact/org.mockito/mockito-core
+	testImplementation("org.mockito:mockito-core:4.4.0")
+
+	// https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter
+	testImplementation("org.mockito:mockito-junit-jupiter:4.4.0")
+
 }
 
 extra["springCloudVersion"] = "2021.0.3"

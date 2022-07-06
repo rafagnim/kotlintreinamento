@@ -12,7 +12,7 @@ data class Produto (
     @Id
     @Column(name = "produto_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    var id: Long? = null,
 
     @Column(name = "nome")
     var nome: String,
