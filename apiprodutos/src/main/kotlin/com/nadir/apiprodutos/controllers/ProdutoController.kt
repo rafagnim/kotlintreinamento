@@ -55,8 +55,7 @@ class ProdutoController (
         val clienteID: Long = usuarioClient.validaToken(authorizationHeader)
         if (clienteID == 1L) {
             return produtoService.disable(id)
-        } else throw throw AuthenticationException("Usuário não autorizado")
-
+        } else throw AuthenticationException("Usuário não autorizado")
     }
 
     @PatchMapping("/enable/{id}")
@@ -65,6 +64,6 @@ class ProdutoController (
         val clienteID: Long = usuarioClient.validaToken(authorizationHeader)
         if (clienteID == 1L) {
             return produtoService.enable(id)
-        } else throw throw AuthenticationException("Usuário não autorizado")
+        } else throw AuthenticationException("Usuário não autorizado")
     }
 }

@@ -13,7 +13,7 @@ class ControllerAdvice {
     @ExceptionHandler(ForbiddenAccessException::class)
     fun handlerForbiddenAccessException(ex: ForbiddenAccessException, request: WebRequest): ResponseEntity<ErrorResponse> {
         val error = ErrorResponse(
-            " ${ex.message}"
+            ex.message
         )
         return ResponseEntity(error, HttpStatus.FORBIDDEN)
     }
@@ -21,7 +21,7 @@ class ControllerAdvice {
     @ExceptionHandler(EstoqueInsuficenteException::class)
     fun handlerMethodEstoqueInsuficenteException(ex: EstoqueInsuficenteException, request: WebRequest): ResponseEntity<ErrorResponse> {
         val error = ErrorResponse(
-            " ${ex.message}"
+            ex.message
         )
         return ResponseEntity(error, HttpStatus.BAD_REQUEST)
     }
@@ -35,11 +35,11 @@ class ControllerAdvice {
     }
 
     @ExceptionHandler(AuthenticationException::class)
-    fun handlerAuthenticationException(ex: NotFoundException): ResponseEntity<ErrorResponse> {
+    fun handlerAuthenticationException(ex: AuthenticationException): ResponseEntity<ErrorResponse> {
         val error = ErrorResponse(
             ex.message
         )
-        return ResponseEntity(error, HttpStatus.FORBIDDEN)
+        return ResponseEntity(error, HttpStatus.UNAUTHORIZED)
     }
 
     @ExceptionHandler(EstoqueNaoZeradoException::class)

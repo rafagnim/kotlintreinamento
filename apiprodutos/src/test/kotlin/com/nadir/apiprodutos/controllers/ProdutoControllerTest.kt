@@ -3,38 +3,31 @@ package com.nadir.apiprodutos.controllers
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.nadir.apiprodutos.components.ProdutoComponent
 import com.nadir.apiprodutos.entities.Produto
+import com.nadir.apiprodutos.exceptions.AuthenticationException
 import com.nadir.apiprodutos.exceptions.NotFoundException
 import com.nadir.apiprodutos.integration.feign.client.UsuarioClient
-import com.nadir.apiprodutos.repositories.ProdutoRepository
 import com.nadir.apiprodutos.requests.EstoqueRequest
 import com.nadir.apiprodutos.requests.ProdutoRequest
 import com.nadir.apiprodutos.services.ProdutoService
 import com.nadir.apiprodutos.util.AbstractTest
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.*
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
-import org.springframework.test.web.servlet.ResultMatcher
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestHeader
-import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.bind.annotation.*
+import java.lang.Exception
 import java.math.BigDecimal
-import javax.validation.Valid
 
 
 private const val AUTHORIZATIONHEADER: String = "Bearer eh..."
@@ -179,5 +172,55 @@ class ProdutoControllerTest(): AbstractTest() {
                 .content(ObjectMapper().writeValueAsString(estoqueRequest)))
             .andDo(print())
             .andExpect(jsonPath("$").value(false))
+    }
+
+    @Test
+    fun `quando desativa um produto o isActive deve retornar false`() {
+        `when`(produtoService.disable(ArgumentMatchers.anyLong())).thenReturn(produtoAtivo.also { it.isActive = false })
+        this.mockMvc.perform(
+            patch("/api/v1/produtos/disable/{id}", 1L)
+                .header(HttpHeaders.AUTHORIZATION, AUTHORIZATIONHEADER)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(jsonPath("$.isActive").value(false))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun `quando desativa um produto e o usuario logado nao tem autorizacao deve lancar excecao`() {
+        `when`(usuarioClient.validaToken(AUTHORIZATIONHEADER)).thenReturn(2L )
+        this.mockMvc.perform(
+            patch("/api/v1/produtos/disable/{id}", 1L)
+                .header(HttpHeaders.AUTHORIZATION, AUTHORIZATIONHEADER)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isUnauthorized)
+            .andExpect { result -> assertTrue(result.resolvedException is AuthenticationException) }
+            .andExpect { result -> assertEquals("Usuário não autorizado", result.resolvedException?.message )}
+    }
+
+    @Test
+    fun `quando ativa um produto o isActive deve retornar true`() {
+        `when`(produtoService.enable(ArgumentMatchers.anyLong())).thenReturn(produtoInativo.also { it.isActive = true })
+        this.mockMvc.perform(
+            patch("/api/v1/produtos/enable/{id}", 1L)
+                .header(HttpHeaders.AUTHORIZATION, AUTHORIZATIONHEADER)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(jsonPath("$.isActive").value(true))
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun `quando ativa um produto e o usuario logado nao tem autorizacao deve lancar excecao`() {
+        `when`(usuarioClient.validaToken(AUTHORIZATIONHEADER)).thenReturn(2L )
+        this.mockMvc.perform(
+            patch("/api/v1/produtos/enable/{id}", 1L)
+                .header(HttpHeaders.AUTHORIZATION, AUTHORIZATIONHEADER)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isUnauthorized)
+            .andExpect { result -> assertTrue(result.resolvedException is AuthenticationException) }
+            .andExpect { result -> assertEquals("Usuário não autorizado", result.resolvedException?.message )}
     }
 }
