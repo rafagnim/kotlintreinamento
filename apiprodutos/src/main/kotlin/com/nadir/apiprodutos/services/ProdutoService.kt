@@ -14,44 +14,25 @@ class ProdutoService (
     private val produtoRepository: ProdutoRepository
         ) {
     @CacheEvict(allEntries = true, cacheNames = ["getAll"])
-    fun save(produto: Produto) : Produto {
-        return produtoRepository.save(produto)
-    }
+    fun save(produto: Produto) = produtoRepository.save(produto)
 
     @Cacheable("getAll")
-    fun findAll() : List<Produto>{
-        return produtoRepository.findAll()
+    fun findAll() = produtoRepository.findAll()
+
+    fun disable(id: Long) = produtoRepository.findById(id).orElseThrow {
+            NotFoundException("Produto com id %s não localizado.".format(id)) }.let {
+            if (it.quantidade.compareTo(BigDecimal.ZERO) == 0 && it.quantidadeReservadaCarrinho.compareTo(BigDecimal.ZERO) == 0) {
+                it.isActive = false
+                produtoRepository.save(it)
+            } else {
+                throw EstoqueNaoZeradoException("O estoque precisa estar zerado para desativar o produto")
+            }
     }
 
-    fun disable(id: Long): Produto {
-        val produto = produtoRepository.findById(id).orElseThrow {
-            NotFoundException(
-                "Produto com id %s não localizado.".format(
-                    id
-                )
-            )
-        }
-
-        if (produto.quantidade.compareTo(BigDecimal.ZERO) == 0 && produto.quantidadeReservadaCarrinho.compareTo(BigDecimal.ZERO) == 0) {
-            produto.isActive = false
-            produtoRepository.save(produto)
-        } else {
-            throw EstoqueNaoZeradoException("O estoque precisa estar zerado para desativar o produto")
-        }
-
-        return produto
-
+    fun enable(id: Long) = produtoRepository.findById(id).orElseThrow { NotFoundException("User with id %s not exists.".format(id)) }.let {
+        it.isActive = true
+        produtoRepository.save(it)
     }
 
-    fun enable(id: Long): Produto {
-        val produto = produtoRepository.findById(id).orElseThrow { NotFoundException("User with id %s not exists.".format(id)) }
-        produto.isActive = true
-        produtoRepository.save(produto)
-
-        return produto
-    }
-
-    fun findById(id: Long): Produto {
-        return produtoRepository.findById(id).orElseThrow()
-    }
+    fun findById(id: Long) = produtoRepository.findById(id).orElseThrow()
 }

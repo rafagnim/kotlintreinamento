@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.nadir.apiprodutos.components.ProdutoComponent
 import com.nadir.apiprodutos.entities.Produto
 import com.nadir.apiprodutos.exceptions.AuthenticationException
-import com.nadir.apiprodutos.exceptions.NotFoundException
 import com.nadir.apiprodutos.integration.feign.client.UsuarioClient
 import com.nadir.apiprodutos.requests.EstoqueRequest
 import com.nadir.apiprodutos.requests.ProdutoRequest
@@ -25,7 +24,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.web.bind.annotation.*
 import java.lang.Exception
 import java.math.BigDecimal
 
@@ -34,9 +32,6 @@ private const val AUTHORIZATIONHEADER: String = "Bearer eh..."
 
 @ExtendWith(MockitoExtension::class)
 class ProdutoControllerTest(): AbstractTest() {
-
-   // @Autowired
-    //private lateinit var produtoRepository: ProdutoRepository
 
 
     private lateinit var produtoAtivo: Produto
@@ -65,8 +60,6 @@ class ProdutoControllerTest(): AbstractTest() {
             produtoAtivo, produtoInativo
         )
         produtoRequest = ProdutoComponent.createProdutoRequest()
-        //produtoRepository.saveAll(produtoLista)
-        //produtoRepository.flush()
 
         `when`(usuarioClient.validaToken(AUTHORIZATIONHEADER)).thenReturn(1L )
 

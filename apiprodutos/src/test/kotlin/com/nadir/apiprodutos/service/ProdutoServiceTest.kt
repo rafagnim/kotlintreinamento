@@ -28,7 +28,6 @@ class ProdutoServiceTest {
     private lateinit var produtoRepository: ProdutoRepository
 
     private lateinit var produto: Produto
-    private lateinit var produtoRequest: ProdutoRequest
     private lateinit var produtoList: List<Produto>
 
     @BeforeEach
