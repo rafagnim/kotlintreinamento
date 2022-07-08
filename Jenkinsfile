@@ -18,11 +18,6 @@ pipeline {
             }
         }
     }
-    post {
-        failure {
-            mail to: 'xxx@yyyy.com.br', subject: 'Build failed', body 'Please fix!'
-        }
-    }
 }
 
 def gradlew(String... args) {
