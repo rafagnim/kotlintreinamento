@@ -19,6 +19,7 @@ class ProdutoService (
     @Cacheable("getAll")
     fun findAll() = produtoRepository.findAll()
 
+    @CacheEvict(allEntries = true, cacheNames = ["getAll"])
     fun disable(id: Long) = produtoRepository.findById(id).orElseThrow {
             NotFoundException("Produto com id %s não localizado.".format(id)) }.let {
             if (it.quantidade.compareTo(BigDecimal.ZERO) == 0 && it.quantidadeReservadaCarrinho.compareTo(BigDecimal.ZERO) == 0) {
@@ -29,6 +30,7 @@ class ProdutoService (
             }
     }
 
+    @CacheEvict(allEntries = true, cacheNames = ["getAll"])
     fun enable(id: Long) = produtoRepository.findById(id).orElseThrow { NotFoundException("User with id %s not exists.".format(id)) }.let {
         it.isActive = true
         produtoRepository.save(it)
